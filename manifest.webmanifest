@@ -1,0 +1,14 @@
+{
+  "name": "Salon Kapı",
+  "short_name": "Salon Kapı",
+  "description": "Spor salonu QR'lı giriş: üye ekranı, kapı ve sahip paneli (demo).",
+  "lang": "tr",
+  "start_url": "./#/uye",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2efe8",
+  "theme_color": "#15171a",
+  "icons": [
+    { "src": "ikon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

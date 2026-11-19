@@ -1,0 +1,72 @@
+/* Giriş sayfası ve teklif. */
+.giris { max-width: 1180px; margin: 0 auto; padding: clamp(28px, 6vw, 72px) var(--gutter) 72px; display: grid; gap: clamp(28px, 4vw, 44px); }
+.giris-ust { display: grid; gap: 16px; max-width: 900px; }
+.giris-ust h1 { font-size: clamp(2.8rem, 8vw, 6.2rem); line-height: 0.92; }
+.giris-ust h1 span { color: var(--muted); }
+.giris-ozet { font-size: clamp(1.05rem, 1.8vw, 1.25rem); max-width: 58ch; color: var(--muted); }
+
+.roller { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 14px; }
+.rol {
+  position: relative; display: grid; align-content: start; gap: 8px; padding: 22px 22px 26px;
+  border-radius: var(--r-l); border: 1.5px solid var(--line); background: var(--surface); color: inherit; text-decoration: none;
+  transition: transform var(--dur) var(--ease-out), border-color var(--dur-fast), box-shadow var(--dur);
+}
+a.rol:hover { transform: translateY(-3px); border-color: var(--ink); box-shadow: var(--shadow-2); }
+.rol-no { font: 700 0.9rem/1 var(--font-mono); color: var(--brand); }
+.rol-ad { font: 700 clamp(2rem, 3.4vw, 2.8rem)/0.95 var(--font-display); }
+.rol-alt { color: var(--muted); max-width: 34ch; }
+.rol-kapi { background: var(--door-bg); color: var(--door-ink); border-color: var(--door-bg); grid-row: span 2; align-content: end; min-height: 300px; overflow: hidden; }
+.rol-kapi::before {
+  content: ""; position: absolute; right: -40px; top: -40px; width: 220px; aspect-ratio: 1; border-radius: 50%;
+  border: 18px solid var(--door-ok); opacity: 0.9;
+}
+.rol-kapi .etiket, .rol-kapi .rol-alt { color: var(--door-muted); }
+.rol-kapi:hover { border-color: var(--brand); }
+.rol-uye { grid-row: span 2; }
+.rol-qr { width: 150px; background: #fff; border-radius: var(--r-m); padding: 4px; border: 1px solid var(--line); margin-top: 6px; }
+.rol-link { font-weight: 600; }
+.rol-panel { grid-row: span 2; background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.rol-panel .etiket, .rol-panel .rol-no, .rol-panel .rol-alt { color: rgba(21, 23, 26, 0.75); }
+
+.teklif-serit {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 20px; border-radius: var(--r-m);
+  border: 2px solid var(--ink); text-decoration: none; font-weight: 600;
+  transition: background var(--dur-fast);
+}
+.teklif-serit:hover { background: var(--surface); }
+.teklif-serit span:nth-child(2) { flex: 1; min-width: 220px; }
+.giris-not { color: var(--muted); font-size: 0.875rem; }
+
+@media (max-width: 900px) {
+  .roller { grid-template-columns: 1fr; }
+  .rol-kapi { min-height: 220px; }
+}
+
+/* Teklif */
+.teklif { max-width: 860px; margin: 0 auto; padding: clamp(28px, 5vw, 56px) var(--gutter) 64px; display: grid; gap: 30px; }
+.teklif-ust { display: grid; gap: 12px; padding-bottom: 20px; border-bottom: 3px solid var(--ink); }
+.teklif-ust .etiket { color: var(--brand); }
+.teklif-ust h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); }
+.teklif-ozet { font-size: 1.15rem; color: var(--muted); max-width: 52ch; }
+.teklif-bolum { display: grid; gap: 14px; }
+.teklif-bolum h2 { font-size: 1.8rem; }
+.sozler { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sozler li { display: grid; grid-template-columns: 52px 1fr; gap: 14px; padding: 14px 16px; background: var(--surface); border-left: 4px solid var(--ok); }
+.soz-no { font-size: 2.2rem; color: var(--ok); }
+.sozler h3 { font-size: 1.35rem; margin-bottom: 4px; }
+.sozler p { color: var(--muted); }
+.teklif-iki { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.nokta { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.teklif-not { font-weight: 600; padding: 10px 12px; background: var(--brand-soft); border-radius: var(--r-s); }
+.teklif-alt { display: flex; gap: 10px; flex-wrap: wrap; }
+@media (max-width: 720px) { .teklif-iki { grid-template-columns: 1fr; } }
+
+@media print {
+  body { background: #fff; color: #000; }
+  .demo-serit, .teklif-alt, .atla { display: none !important; }
+  .teklif { padding: 0; max-width: none; }
+  .sozler li { background: #fff; border-left-color: #000; break-inside: avoid; }
+  .soz-no { color: #000; }
+}
+
+.hata-kutu { max-width: 520px; margin: 80px auto; padding: 24px; display: grid; gap: 10px; }
