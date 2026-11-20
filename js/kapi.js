@@ -1,8 +1,10 @@
 // Kapı ekranı: laptop kamerası QR'ı okur (jsQR) ya da USB okuyucu klavye gibi yazar; karar verir, kaydeder.
-import { qrDogrula, yedekKodBul } from './kod.js';
+import { qrDogrula, qrCoz, yedekKodBul } from './kod.js';
 import { kapiKarari } from './kural.js';
 import { durumYukle, hareketEkle, degisiklikDinle, salonAdi } from './veri.js';
 import { k, saatTR, sesiAc, bip, RED_ETIKET } from './ui.js';
+import { satirToplayici } from './okuyucu.js';
+import { SERI_SABLONU, seriBolumuKur } from './kapi-seri.js';
 
 const TARAMA_ARALIGI_MS = 120;
 const SONUC_SURESI_MS = 2600;
@@ -50,7 +52,7 @@ const SABLON = `
           <input id="yedek-kod" class="girdi" inputmode="numeric" autocomplete="off" maxlength="6" placeholder="000000">
           <button class="btn btn-ana" type="submit">Onayla</button>
         </div>
-      </form>
+      </form>${SERI_SABLONU}
       <div class="son-gecisler"><p class="etiket">Son okutmalar</p><ol data-son></ol></div>
     </aside>
   </div>
@@ -73,8 +75,13 @@ export function kapiAc(kok) {
   const ctx = tuval.getContext('2d', { willReadFrequently: true });
   const s = {
     mod: 'giris', akis: null, tarama: null, mesgul: false, sonMetin: '', sonZaman: 0,
-    tampon: '', tusSon: 0, kilit: null, zamanlar: [], sessiz: new Map(),
+    tusSon: 0, kilit: null, zamanlar: [], sessiz: new Map(),
   };
+  // USB okuyucu: klavye gibi yazan (HID) ve sanal COM portu olan türler aynı toplayıcı mantığıyla;
+  // okuyucu Enter göndermese de geçerli QR kısa bir sessizlikten sonra işlenir.
+  const gecerliMi = (t) => qrCoz(t) !== null;
+  const okuyucudan = (metin) => isle(metin, 'okuyucu');
+  const klavye = satirToplayici(okuyucudan, { gecerliMi });
 
   const salonuYaz = () => { $('[data-salon]').textContent = salonAdi(); };
   const saatiYaz = () => { $('[data-saat]').textContent = saatTR(Date.now()); };
@@ -222,14 +229,13 @@ export function kapiAc(kok) {
   function tus(e) {
     if (e.target instanceof Element && e.target.closest('input, select, textarea')) return;
     const simdi = performance.now();
-    if (simdi - s.tusSon > OKUYUCU_TUS_ARASI_MS) s.tampon = '';
+    if (simdi - s.tusSon > OKUYUCU_TUS_ARASI_MS) klavye.sifirla();
     s.tusSon = simdi;
     if (e.key === 'Enter') {
       // Okuyucunun Enter'ı, odaktaki düğmeyi ya da bağlantıyı da tetiklemesin.
-      if (s.tampon.length >= 6) { e.preventDefault(); isle(s.tampon, 'okuyucu'); }
-      s.tampon = '';
+      if (klavye.ekle('\n') > 0) e.preventDefault();
     } else if (e.key.length === 1) {
-      s.tampon += e.key;
+      klavye.ekle(e.key);
     }
   }
 
@@ -244,11 +250,14 @@ export function kapiAc(kok) {
     girdi.value = '';
   });
   document.addEventListener('keydown', tus);
+  const seriyiKapat = seriBolumuKur(kok, { teslim: okuyucudan, gecerliMi });
   const gorunurluk = () => { if (document.visibilityState === 'visible' && s.akis) ekranAcikTut(); };
   document.addEventListener('visibilitychange', gorunurluk);
 
   return () => {
     kapandi = true;
+    klavye.sifirla();
+    seriyiKapat();
     dinlemeyiBirak();
     akisiDurdur();
     s.zamanlar.forEach((z) => { clearInterval(z); clearTimeout(z); });

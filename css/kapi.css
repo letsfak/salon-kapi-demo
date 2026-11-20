@@ -73,6 +73,10 @@ body.sayfa-kapi { background: var(--door-bg); color: var(--door-ink); }
   font: 600 1.4rem/1 var(--font-mono); letter-spacing: 0.3em;
 }
 
+.seri-not, .seri-durum { color: var(--door-muted); font-size: 0.9rem; }
+.seri-durum:empty { display: none; }
+.seri .yedek-satir .girdi { font: 600 1rem/1 var(--font-body); letter-spacing: 0; }
+
 .son-gecisler { display: grid; gap: 10px; }
 .son-gecisler .etiket { color: var(--door-muted); }
 .son-gecisler ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
